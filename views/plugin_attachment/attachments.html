@@ -1,0 +1,20 @@
+<script>
+	// url passed to javascript in attachments.js to upload a new attachment
+	var addurl="{{=XML(URL('plugin_attachment', 'add', vars=dict(parentname=parentname, parentid=parentid)))}}"
+</script >
+
+<script src="{{=URL('static', 'plugin_attachment/attachments.js')}}" type="text/javascript"></script>
+
+{{if DEBUG:}}
+	{{=response.toolbar()}}
+{{pass}}
+
+<H4>Attachments (Click button; or drag/drop multiple files anywhere on the page)</H4>
+<FORM class="well">
+	<!-- prettier bespoke button redirects to the ugly standard files button which is hidden -->
+	<INPUT type='button' class='btn' value="Add Attachment" onclick ="$(this.form).find('#files')[0].click();">
+	<INPUT id='files' name='files' type='file' multiple='multiple' style='visibility: hidden' onchange="upload(new FormData(this.form))">
+</FORM>
+
+{{# display attachments. note use url parameter as sets data-w2p_remote=url even when ajax=False}}
+{{=LOAD(url=URL(c='plugin_attachment', f='display.load', vars=dict(parentname=parentname, parentid=parentid)), ajax=False, target='attachments')}}

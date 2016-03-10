@@ -1,0 +1,18 @@
+This is a web2py plugin that allows multiple files to be added to a record. 
+
+To install, upload using the web2py admin plugin interface.
+
+Warning: 
+	There is no indication of progress of the upload until you get the "files uploaded" flash message => avoid large files and large numbers of files.
+
+Demo usage:
+	Navigate to plugin_attachment
+	You will see a customer edit form with an area for attachments beneath it
+	Add file attachments
+		Click the add button to add multiple files from the hard drive
+		OR drag and drop files from a web page
+	Click on attachments to download
+
+Application usage:
+	Base your view on edit.html or just use it without change.
+	Create an edit controller that returns parentname and parentid (see plugin_attachment/edit as example)

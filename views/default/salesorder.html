@@ -1,0 +1,4 @@
+{{extend 'layout.html'}}
+{{include 'default/files.html'}}
+
+{{=load2(c='orderline', f='grid.load', vars=dict(salesorder=id), target='orderline')}}

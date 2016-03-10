@@ -1,0 +1,33 @@
+/* component headers */
+h1 {
+	font-size:1.3em;
+	margin:0px;
+}
+/* position calendar widget in front of dialog box */
+.calendar {
+	z-index: 1100;
+}
+/* columnar table used for edit view*/
+.ct-table {
+	width : 100%;	
+}
+.ct-sectionheader {
+	text-align : left;
+	font-size: 1.05em;
+}
+.ct-label {
+	text-align :right;
+}
+.ct-table input[type="text"], .ct-table input[type="password"], .ct-table textarea, .ct-table select {
+	width: 98%;
+}
+.total {
+	text-align: left;
+	font-weight: bold;
+	font-size: 1.3em;
+}
+/* format links */
+A:link {text-decoration: underline !important} 
+A:visited {text-decoration: none}
+A:active {text-decoration: none}
+A:hover {text-decoration: none; color:blue  !important}

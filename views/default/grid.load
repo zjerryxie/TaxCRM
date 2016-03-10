@@ -1,0 +1,9 @@
+{{try:
+=componentheader
+except:
+pass}}
+
+{{if DEBUG: 
+	=response.toolbar()
+	pass}}
+{{=grid}}

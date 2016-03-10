@@ -1,0 +1,7 @@
+{{extend 'layout.html'}}
+{{include 'default/files.html'}}
+
+{{=load2(c='product', f='edit.load', args=[id], target='product')}}
+
+{{parentname='product'; parentid=id;}}
+{{include 'plugin_attachment/attachments.html'}}

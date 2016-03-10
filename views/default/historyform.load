@@ -1,0 +1,9 @@
+{{# drop down box to navigate to historical pages}}	
+<form onsubmit="this.action=this.destination.value; return true">
+	<select name="destination">
+		{{for elem in reversed(session.history):}}
+  			<option value="{{=elem}}">{{=elem}}</option>
+		{{pass}}
+	</select>
+	<input type=submit value="Go">
+</form>

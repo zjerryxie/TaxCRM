@@ -1,0 +1,11 @@
+{{extend 'layout.html'}}
+{{include 'default/files.html'}}
+<script src="{{=URL('static', 'js/crafty_postcode.class.js')}}" type="text/javascript"></script>
+<script src="{{=URL('static', 'js/crafty_postcode.js')}}" type="text/javascript"></script>
+
+{{=load2(c="customer", f='edit.load', args=[id], target='customer')}}
+{{=load2(c='salesorder', f='grid.load', vars=dict(customer=id), target='salesorder')}}
+{{=load2(c='event', f='grid.load', vars=dict(customer=id), target='event')}}
+
+{{parentname='customer'; parentid=id;}}
+{{include 'plugin_attachment/attachments.html'}}

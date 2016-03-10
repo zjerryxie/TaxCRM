@@ -1,0 +1,9 @@
+{{extend 'layout.html'}}
+
+{{=form}}
+
+{{# set the table and id for the attachment}}
+{{parentname='plugin_attachment_customer'; parentid=id;}}
+{{if id:}}
+	{{include 'plugin_attachment/attachments.html'}}
+{{pass}}
