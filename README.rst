@@ -10,6 +10,7 @@ requirements
 
 install AMPPS
 goto ampps installation and install opencart
+
 	rename config-dist.php and admin/config-dist.php to config.php
 	goto 127.0.0.1:80 [note localhost fails]
 	check database name from phpmyadmin
