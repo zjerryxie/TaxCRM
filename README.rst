@@ -1,3 +1,10 @@
+description
+-----------
+
+This is a CRM system based on web2py and sqlite.
+
+It links to opencart online shop which runs on apache and mysql.
+
 requirements
 ------------
 
@@ -9,6 +16,7 @@ goto ampps installation and install opencart
 	set password to mysql, database name as above, prefix oc_
 install web2py
 clone crm to web2py/applications/crm
+run populate from menu to setup test data
 
 servers
 -------
@@ -23,21 +31,10 @@ web2py port 8000
 	run under python 2 (not py3 compatible)
 	crm system manages master database on sqlite
 
-
-opencart changes
-----------------
-
-checkout/cart
-	remove coupon, gift voucher, shipping, only show total
-checkout/checkout
-	remove company name, delivery method please select shipping rate
-	payment method
-	only show total
-
 models
 ------
 
-db - sets up the database connection, logging etc..
+aaa - sets up the database connection, logging etc..
 dbtables - defines the tables
 menu - the menu!
 
@@ -50,19 +47,18 @@ sqlite used as master database
 modules
 -------
 
-crmsetup
+datasetup
 	deletedata
-		utlity to delete all tables in crm database except auth and those in the exclude list.
+		utility to delete all tables in crm database except auth and those in the exclude list.
 		used during testing to reset database.
 	populate
 		populates database with test data
-		extracts some data from opencart
+		extracts some data from opencart e.g. images and products
 
-view
-	ctform
-		converts ctform to columntable format
-	viewtools
-		utlities for views
+ctform
+	converts ctform to columntable format
+viewtools
+	utlities for views
 
 static
 ------
@@ -74,8 +70,7 @@ crafty_*
 views
 -----
 
-generic - edit, grid
-shared - historyform, files
+shared - historyform, files, edit, grid
 specific - customer, salesorder
 
 controllers
