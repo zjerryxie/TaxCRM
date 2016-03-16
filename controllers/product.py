@@ -17,13 +17,13 @@ def edit():
 
     if form.process(onvalidation=validate).accepted:
         # propogate changes to the web database
-        wp=web.oc6t_product
-        wd=web.oc6t_product_description
+        wp=web.oc_product
+        wd=web.oc_product_description
         
         # update product matching fields in each file. 
         if id:
             webid=web(wp.model==id).select().first().product_id
-            # link web.oc6t_product.model=>db.product.id
+            # link web.oc_product.model=>db.product.id
             web(wp.model==id).update(**wp._filter_fields(form.vars))
             web((wd.product_id==webid) & (wd.language_id==1)).update(**wd._filter_fields(form.vars))
         # add new product
@@ -32,8 +32,8 @@ def edit():
             wd.insert(product_id=webid, language_id=1, **wd._filter_fields(form.vars))
 
         # propagate productcategory
-        wpc=web.oc6t_product_to_category
-        wcd=web.oc6t_category_description
+        wpc=web.oc_product_to_category
+        wcd=web.oc_category_description
         web(wpc.product_id==webid).delete()
         for cat in form.vars.categories.split(","):
            webcat = web((wcd.name==cat ) & (wcd.language_id==1)).select().first()

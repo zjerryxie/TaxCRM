@@ -1,7 +1,7 @@
 """ contains table definitions and calls populate """
+from datetime import datetime
 
 ############### shared functions #########################################################
-
 def html(field, value): 
     """ widget for wysiwyg html editing """
     return TEXTAREA(_id = str(field).replace('.','_'), _name=field.name, 
@@ -75,8 +75,7 @@ db.define_table('orderline',
         Field('product', 'reference product', writable=False),
         Field('price', 'decimal(8,2)', writable=False),
         Field('quantity', 'integer', requires=IS_INT_IN_RANGE(1,11), default=1),
-        Field('total', compute=lambda row: row.price*row.quantity))
-
+        Field('total', 'decimal(8,2)', writable=False))
 
 ######################## OPENCART CATEGORY AND PRODUCT ########################################################################
 
@@ -87,12 +86,12 @@ def define_web():
     web = DAL(webstring, pool_size=10, lazy_tables = True, migrate=False)
 
     # category
-    web.define_table('oc6t_category',
+    web.define_table('oc_category',
         Field('category_id', type='id', notnull=True, writable=False),
         Field('parent_id', type='integer', default='0', notnull=True, writable=False),
         Field('top', type='integer', notnull=True, writable=False))
     
-    web.define_table('oc6t_category_description',
+    web.define_table('oc_category_description',
         Field('category_id', type='integer', notnull=True, writable=False),
         Field('language_id', type='integer', notnull=True, writable=False),
         Field('name', type='text', length=255, notnull=True),
@@ -101,28 +100,28 @@ def define_web():
         format=lambda r: r["description"])
 
     # product
-    web.define_table('oc6t_product',
+    web.define_table('oc_product',
         Field('product_id', type='id', notnull=True),
         Field('model', type='text', notnull=True),
         Field('quantity', type='integer', default='0', notnull=True),
         Field('image', type='text', length=255),
         Field('price', type='decimal(15,4)'))
     
-    web.define_table('oc6t_product_description',
-        Field('product_id', type=web.oc6t_product, notnull=True),
+    web.define_table('oc_product_description',
+        Field('product_id', type=web.oc_product, notnull=True),
         Field('language_id', type='integer', notnull=True, default=1),
         Field('name', type='text', length=25, notnull=True),
         Field('description', type='text', notnull=True, widget=html),
         primarykey=['product_id', 'language_id'])
     
-    web.define_table('oc6t_product_image',
+    web.define_table('oc_product_image',
         Field('product_image_id', type='id', notnull=True),
         Field('product_id', type='integer', notnull=True),
         Field('image', type='upload', length=255),
         Field('sort_order', type='integer', default='0', notnull=True))
 
     # product-category
-    web.define_table('oc6t_product_to_category',
+    web.define_table('oc_product_to_category',
         Field('category_id'),
         Field('product_id'),
         primarykey=['category_id', 'product_id'])

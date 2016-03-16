@@ -47,19 +47,25 @@ def populate(db, web, testimages):
     t0 = time.time()
 
     # get categories
-    c=web.oc6t_category
-    cd=web.oc6t_category_description
+    c=web.oc_category
+    cd=web.oc_category_description
     cats = web(c.category_id == cd.category_id).select(c.parent_id, c.category_id, cd.name)
     for cat in cats:
-        if cat.oc6t_category.parent_id != 0:
-            p = web(cd.category_id == cat.oc6t_category.parent_id).select().first().name
+        if cat.oc_category.parent_id != 0:
+            p = web(cd.category_id == cat.oc_category.parent_id).select().first().name
         else:
             p=""
-        db.category.insert(category1=p, category2=cat.oc6t_category_description.name)
+        log.info(db.category.fields)
+        log.info(p)
+        log.info(cat.oc_category_description.name)
+        try:
+            db.category.insert(category1=p, category2=cat.oc_category_description.name)
+        except:
+            log.exception("oh no")
 
 ############# populate product data and images from opencart demo ############################
 
-    for prod in web(web.oc6t_product).select():
+    for prod in web(web.oc_product).select():
         log.info("loading "+str(prod.product_id))
 
         # randomize price on web
@@ -68,16 +74,19 @@ def populate(db, web, testimages):
         # get categories for product
         catstring = []
         for webcat in web(
-            (web.oc6t_product_to_category.product_id==prod.product_id) & 
-            (web.oc6t_product_to_category.category_id==c.category_id) &
+            (web.oc_product_to_category.product_id==prod.product_id) & 
+            (web.oc_product_to_category.category_id==c.category_id) &
             (cd.category_id==c.category_id) &
             (cd.language_id==1)
             ).select():
-            catstring.append(webcat.oc6t_category_description.name)
+            catstring.append(webcat.oc_category_description.name)
 
         # copy web to crm product
-        desc=web((web.oc6t_product_description.product_id==prod.product_id) & \
-                    (web.oc6t_product_description.language_id==1) ).select().first()
+        desc=web((web.oc_product_description.product_id==prod.product_id) & \
+                    (web.oc_product_description.language_id==1) ).select().first()
+        log.info(desc)
+
+        log.info(desc.description)
         id=db.product.insert(name=desc.name,
                           price=prod.price, 
                           quantity=prod.quantity,
@@ -88,7 +97,7 @@ def populate(db, web, testimages):
         prod.update_record(model=id)
 
         # images from web
-        for pi in [prod] + list(web(web.oc6t_product_image.product_id==prod.product_id).select()):
+        for pi in [prod] + list(web(web.oc_product_image.product_id==prod.product_id).select()):
             if pi.image is None:
                 continue
             try:
@@ -106,7 +115,7 @@ def populate(db, web, testimages):
 
 ###### populate remaining db tables ################################################
     from gluon.contrib import populate
-    for table in ['customer','event','salesorder','orderline','payment']:
+    for table in ['customer','event','salesorder','orderline']:
         n=30
         # populate transactional tables with greater volume
         if table in ['salesorder','orderline']: n=3*n

@@ -1,13 +1,16 @@
 import logging as log
 
 def calc_orderline(db, orderline):
-	line = db.orderline[orderline]
-	line.total =  line.price * line.quantity
-	line.update_record()
+	log.info(type(orderline))
+	log.info(orderline.id)
+	log.info(orderline.price)
+	log.info(orderline.quantity)
+	orderline.total =  orderline.price * orderline.quantity
+	orderline.update_record()
 
 def calc_salesorder(db, salesorder):
 	total = 0
-	for line in db(db.orderline.salesorder==salesorder).select():
+	for line in db(db.orderline.salesorder==salesorder.id).select():
 		total = total + line.total
 	salesorder.price = total
 	salesorder.update_record()

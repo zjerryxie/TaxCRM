@@ -1,15 +1,21 @@
 requirements
 ------------
 
-install apache/mysql/opencart via AMPPS
-install web2py and crm application
+install AMPPS
+goto ampps installation and install opencart
+	rename config-dist.php and admin/config-dist.php to config.php
+	goto 127.0.0.1:80 [note localhost fails]
+	check database name from phpmyadmin
+	set password to mysql, database name as above, prefix oc_
+install web2py
+clone crm to web2py/applications/crm
 
 servers
 -------
 
 apache port 80
 	localhost/opencart
-	localhost/opencart/admin (admin/a)
+	localhost/opencart/admin (admin/pass)
 mysql port 3306
 	drives opencart database
 	localhost/phpmyadmin (root/a)
