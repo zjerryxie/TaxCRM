@@ -24,10 +24,6 @@ tax_agent = initialize_agent(
     agent="conversational-react-description"  # Changed agent type
 )
 
-def query_agent(prompt: str) -> str:
-    """Unified AI interface for all tax tasks"""
-    return tax_agent.run(prompt)
-
 tools.append(
     Tool(
         name="IRS Rule Lookup",
@@ -35,3 +31,9 @@ tools.append(
         description="Fetch latest IRS rules for forms (1040, 1120, etc.)"
     )
 )
+
+# In ai_agent/core.py
+def query_agent(prompt: str):
+    result = tax_agent.run(prompt)
+    log_agent_thoughts(tax_agent.agent.llm_chain.verbose=True)  # Capture reasoning
+    return result
