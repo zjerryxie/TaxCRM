@@ -1,0 +1,4 @@
+<div hx-ext="sse" sse-connect="/ai/stream">
+  <div id="chat-history" sse-swap="message"></div>
+  <input type="text" hx-post="/ai/chat" hx-trigger="keyup[keyCode==13]">
+</div>
