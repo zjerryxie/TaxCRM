@@ -1,6 +1,13 @@
 from app import db
 from werkzeug.security import generate_password_hash
 
+from cryptography.fernet import Fernet
+import os
+
+# Generate key (store in AWS Secrets Manager in production!)
+key = os.environ.get('ENCRYPTION_KEY') or Fernet.generate_key()
+cipher = Fernet(key)
+
 class Client(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(50))
