@@ -55,3 +55,9 @@ import os
 key = os.environ.get('ENCRYPTION_KEY') or Fernet.generate_key()
 cipher = Fernet(key)
 
+class AuditLog(Base):
+    __tablename__ = "audit_logs"
+    id = Column(Integer, primary_key=True)
+    action = Column(String)  # E.g., "AI_W2_PROCESSED"
+    input_hash = Column(String)  # Hash of input data (for integrity)
+    timestamp = Column(DateTime, default=datetime.utcnow)
