@@ -21,3 +21,7 @@ def parse_w2_fields(textract_response: dict) -> dict:
             elif "federal tax withheld" in key: fields["federal_tax_withheld"] = float(value)
             elif "employer ein" in key: fields["employer_ein"] = value
     return fields
+
+def anonymize_w2_data(w2_data: dict) -> dict:
+    """Remove PII before AI processing."""
+    return {**w2_data, "employer_ein": None}  # Example
