@@ -7,9 +7,27 @@ class Client(db.Model):
     last_name = db.Column(db.String(50))
     email = db.Column(db.String(100), unique=True)
     # --- Tax-Specific Additions ---
-    ssn_last4 = db.Column(db.String(4))  # Store encrypted (see Step B)
+    
+    ssn_last4 =db.Column(db.String(200))  # Store encrypted (see Step B)
     filing_status = db.Column(db.String(20))  # 'Single', 'MFJ', 'HOH', etc.
     tax_year = db.Column(db.Integer, default=2024)
+    
+    ssn_encrypted = db.Column(db.String(200))
+
+    def set_ssn(self, ssn_last4):
+        self.ssn_encrypted = cipher.encrypt(ssn_last4.encode()).decode()
+
+    def get_ssn(self):
+        return cipher.decrypt(self.ssn_encrypted.encode()).decode()
+
+class AuditLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    action = db.Column(db.String(100))  # E.g., "Viewed Client SSN"
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Client(db.Model):
+
 
 class TaxDocument(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -25,18 +43,10 @@ import os
 key = os.environ.get('ENCRYPTION_KEY') or Fernet.generate_key()
 cipher = Fernet(key)
 
-class Client(db.Model):
-    # ... other fields ...
-    ssn_encrypted = db.Column(db.String(200))
+from cryptography.fernet import Fernet
+import os
 
-    def set_ssn(self, ssn_last4):
-        self.ssn_encrypted = cipher.encrypt(ssn_last4.encode()).decode()
+# Generate key (store in AWS Secrets Manager in production!)
+key = os.environ.get('ENCRYPTION_KEY') or Fernet.generate_key()
+cipher = Fernet(key)
 
-    def get_ssn(self):
-        return cipher.decrypt(self.ssn_encrypted.encode()).decode()
-
-class AuditLog(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    action = db.Column(db.String(100))  # E.g., "Viewed Client SSN"
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
