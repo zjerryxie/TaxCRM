@@ -13,3 +13,8 @@ def upload_to_s3(file, client_id):
         f'clients/{client_id}/{file.filename}'
     )
     return f"s3://your-taxcrm-bucket/clients/{client_id}/{file.filename}"
+
+@router.post("/ai/chat")
+async def ai_chat(query: str, client_id: int):
+    client = get_client(client_id)
+    return generate_response(query, client)
