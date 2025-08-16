@@ -1,6 +1,7 @@
 import requests
+from pydantic import conint, constr
 
-def get_irs_rule(tax_year: int, form: str) -> dict:
+def get_irs_rule(tax_year: conint(ge=2020, le=2025), form: constr(regex=r'^(1040|1120)$')): 
     try:
         response = requests.get(
             f"https://api.irs.gov/pub/irs-drop/rp-{tax_year}-{form}.json",
