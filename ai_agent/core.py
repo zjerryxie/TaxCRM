@@ -23,3 +23,11 @@ tax_agent = initialize_agent(
 def query_agent(prompt: str) -> str:
     """Unified AI interface for all tax tasks"""
     return tax_agent.run(prompt)
+
+tools.append(
+    Tool(
+        name="IRS Rule Lookup",
+        func=lambda q: get_irs_rule(current_year, q),
+        description="Fetch latest IRS rules for forms (1040, 1120, etc.)"
+    )
+)
