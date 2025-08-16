@@ -6,6 +6,16 @@ import datetime
 import logging as log
 import datasetup
 
+import boto3
+
+def extract_w2_data(s3_path: str) -> dict:
+    textract = boto3.client('textract')
+    response = textract.analyze_document(
+        Document={'S3Object': {'Bucket': 'your-bucket', 'Name': s3_path}},
+        FeatureTypes=['FORMS']
+    )
+    return parse_textract_response(response)  # Custom parser for W-2 fields
+    
 def back():
     """ back to last page """
     if not session.history or len(session.history)< 2: return
