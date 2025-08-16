@@ -25,3 +25,15 @@ def parse_w2_fields(textract_response: dict) -> dict:
 def anonymize_w2_data(w2_data: dict) -> dict:
     """Remove PII before AI processing."""
     return {**w2_data, "employer_ein": None}  # Example
+
+def extract_tax_doc(s3_path: str) -> dict:
+    """Auto-detect doc type (W-2/1099/8879) and parse"""
+    textract = boto3.client('textract')
+    response = textract.analyze_document(Document={"S3Object": {"Bucket": "taxcrm", "Name": s3_path}})
+    
+    if "W-2" in response["Text"]:
+        return parse_w2(response)
+    elif "1099" in response["Text"]:
+        return parse_1099(response)  # Implement similarly
+    else:
+        raise ValueError("Unsupported tax form")
