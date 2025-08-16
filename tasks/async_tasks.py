@@ -15,3 +15,8 @@ def process_w2_async(self, s3_path: str):
     except Exception as e:
         logger.error(f"Failed to process W-2: {e}")
         self.retry(exc=e, countdown=60)  # Retry after 60 seconds
+
+@celery.task
+def refresh_irs_rules():
+    for form in ["1040", "1120"]:
+        get_irs_rule(datetime.now().year, form)  # Auto-updates yearly
