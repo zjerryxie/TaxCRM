@@ -3,6 +3,16 @@ from app.services import risk_analysis, document_ai
 
 router = APIRouter()
 
+from sse_starlette.sse import EventSourceResponse
+
+@router.get("/ai/stream")
+async def ai_stream(request: Request):
+    async def event_generator():
+        while True:
+            yield {"data": get_ai_update()}
+            await asyncio.sleep(1)
+    return EventSourceResponse(event_generator())
+    
 @router.post("/ai/check-deadline")
 async def check_deadline(client_id: int):
     client = get_client(client_id)
