@@ -14,10 +14,14 @@ tools = [
     )
 ]
 
+from langchain.memory import ConversationBufferMemory
+
+memory = ConversationBufferMemory(memory_key="chat_history")
 tax_agent = initialize_agent(
-    tools,
-    llm=OpenAI(temperature=0),
-    agent="zero-shot-react-description"
+    tools, 
+    llm=OpenAI(temperature=0), 
+    memory=memory,  # <- Critical for agent behavior
+    agent="conversational-react-description"  # Changed agent type
 )
 
 def query_agent(prompt: str) -> str:
