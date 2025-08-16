@@ -37,3 +37,12 @@ def extract_tax_doc(s3_path: str) -> dict:
         return parse_1099(response)  # Implement similarly
     else:
         raise ValueError("Unsupported tax form")
+
+from transformers import pipeline
+
+classifier = pipeline("text-classification", model="cross-encoder/nli-deberta-v3-small")
+
+def classify_doc(text: str) -> str:
+    labels = ["W-2", "1099", "8879", "Other"]
+    results = classifier(text, candidate_labels=labels)
+    return results[0]["label"]
