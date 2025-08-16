@@ -35,3 +35,10 @@ def predict_deadline(client: Client) -> dict:
         "standard": base_deadline,
         "extension": base_deadline + timedelta(days=180)
     }
+
+from sklearn.metrics import classification_report
+
+def evaluate_model(X_test, y_test):
+    y_pred = model.predict(X_test)
+    print(classification_report(y_test, y_pred))  # Log precision/recall
+    mlflow.log_metrics(classification_report(y_test, y_pred, output_dict=True))
