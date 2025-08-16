@@ -2,3 +2,10 @@
   <div id="chat-history" sse-swap="message"></div>
   <input type="text" hx-post="/ai/chat" hx-trigger="keyup[keyCode==13]">
 </div>
+
+const chatHistory = document.getElementById('chat-history');
+const eventSource = new EventSource('/ai/stream');
+
+eventSource.onmessage = (e) => {
+    chatHistory.innerHTML += `<div>${e.data}</div>`;
+};
