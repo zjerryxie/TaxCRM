@@ -42,3 +42,8 @@ def evaluate_model(X_test, y_test):
     y_pred = model.predict(X_test)
     print(classification_report(y_test, y_pred))  # Log precision/recall
     mlflow.log_metrics(classification_report(y_test, y_pred, output_dict=True))
+
+def retrain_model(new_data: pd.DataFrame):
+    X, y = new_data[['income', 'deductions']], new_data['audit_flagged']
+    model.partial_fit(X, y)  # Online learning
+    log_model(model, "audit_risk_v2")
