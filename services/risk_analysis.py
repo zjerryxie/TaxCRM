@@ -9,6 +9,16 @@ def check_deadlines(client: Client) -> bool:
 # app/services/risk_analysis.py
 from sklearn.ensemble import RandomForestClassifier
 
+#def audit_risk_score(client: Client) -> float:
+#    model = load_model()  # Pre-trained
+#    return model.predict([[client.income, client.deductions]])
+
+from joblib import load
+import os
+
+# Load pre-trained model (or train in __init__)
+model = load(os.path.join(os.path.dirname(__file__), 'model.pkl')) 
+
 def audit_risk_score(client: Client) -> float:
-    model = load_model()  # Pre-trained
-    return model.predict([[client.income, client.deductions]])
+    features = [[client.income, client.deductions]]  # Customize based on model
+    return model.predict_proba(features)[0][1]
