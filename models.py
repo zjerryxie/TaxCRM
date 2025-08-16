@@ -34,3 +34,9 @@ class Client(db.Model):
 
     def get_ssn(self):
         return cipher.decrypt(self.ssn_encrypted.encode()).decode()
+
+class AuditLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    action = db.Column(db.String(100))  # E.g., "Viewed Client SSN"
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
