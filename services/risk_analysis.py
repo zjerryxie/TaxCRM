@@ -22,3 +22,16 @@ model = load(os.path.join(os.path.dirname(__file__), 'model.pkl'))
 def audit_risk_score(client: Client) -> float:
     features = [[client.income, client.deductions]]  # Customize based on model
     return model.predict_proba(features)[0][1]
+
+from dateutil.parser import parse
+
+def predict_deadline(client: Client) -> dict:
+    """Dynamic deadline prediction considering extensions, state rules"""
+    base_deadline = datetime(client.tax_year, 4, 15)
+    if client.state == "CA":
+        base_deadline += timedelta(days=6)  # CA extensions
+    
+    return {
+        "standard": base_deadline,
+        "extension": base_deadline + timedelta(days=180)
+    }
