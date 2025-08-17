@@ -1,0 +1,139 @@
+{{
+response.title = 'TaxCRM AI Advisor'
+response.subtitle = 'Get personalized tax advice'
+response.meta.viewport = 'width=device-width, initial-scale=1.0'
+}}
+
+{{extend 'layout.html'}}
+
+{{block head}}
+<link rel="stylesheet" href="{{=URL('static', 'css/chat.css')}}">
+{{end}}
+
+<div class="taxcrm-chat-container">
+  <div class="chat-header">
+    <h2><i class="fas fa-robot"></i> Tax Advisor Assistant</h2>
+    <div class="chat-subheader">
+      <span class="status-indicator" id="status-indicator">
+        <i class="fas fa-circle"></i> Ready
+      </span>
+      <span class="last-updated">
+        IRS Tax Law Database Updated: {{=current.deployment_settings.irs_update_date}}
+      </span>
+    </div>
+  </div>
+
+  <div id="chat-messages" class="chat-messages">
+    <!-- Initial welcome message -->
+    <div class="chat-message ai welcome-message">
+      <div class="message-header">
+        <span class="sender">Tax Advisor</span>
+        <span class="time">{{=request.now.time().strftime('%I:%M %p')}}</span>
+      </div>
+      <div class="message-content">
+        <p>Welcome to your personalized tax assistant! I can help with:</p>
+        <ul>
+          <li>1040 filing questions</li>
+          <li>Deduction eligibility</li>
+          <li>Tax credit calculations</li>
+          <li>IRS form guidance</li>
+        </ul>
+        <p>Ask me anything about your tax situation.</p>
+      </div>
+      <div class="sources">
+        <strong>Current Law References:</strong>
+        <ul>
+          <li>IRS Publication 17 (2024)</li>
+          <li>26 USC § 1-9045</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input-container">
+    <div class="input-wrapper">
+      <textarea 
+        id="chat-input" 
+        class="form-control"
+        placeholder="Example: Can I deduct my home office expenses?"
+        rows="3"
+        maxlength="{{=500}}"
+      ></textarea>
+      <div class="input-actions">
+        <span id="char-counter" class="char-counter">500 characters remaining</span>
+        <button id="send-button" class="btn btn-primary">
+          <i class="fas fa-paper-plane"></i> Send
+        </button>
+      </div>
+    </div>
+    <div class="file-upload-container">
+      <label class="btn btn-secondary btn-sm">
+        <i class="fas fa-file-upload"></i> Upload Tax Document
+        <input type="file" id="document-upload" accept=".pdf,.jpg,.png" style="display:none;">
+      </label>
+      <span class="file-types">(W-2, 1099, PDF, JPG, PNG)</span>
+    </div>
+  </div>
+
+  <div id="loading-indicator" class="loading-indicator" style="display:none;">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <span>Analyzing tax question...</span>
+  </div>
+</div>
+
+<!-- Web2py CSRF Token -->
+<input type="hidden" id="csrf_token" name="_csrf_token" value="{{=response.csrf_token}}">
+
+{{block page_js}}
+<script src="{{=URL('static', 'js/chat_interface.js')}}"></script>
+<script>
+// Initialize chat interface
+document.addEventListener('DOMContentLoaded', function() {
+  const chat = new TaxChatInterface({
+    endpoint: "{{=URL('ai_chatbot', 'chat')}}",
+    csrfToken: "{{=response.csrf_token}}",
+    container: '#chat-messages',
+    inputField: '#chat-input',
+    sendButton: '#send-button',
+    loadingIndicator: '#loading-indicator',
+    maxLength: 500
+  });
+
+  // Document upload handler
+  document.getElementById('document-upload').addEventListener('change', function(e) {
+    if (e.target.files.length > 0) {
+      const file = e.target.files[0];
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        alert('File size must be less than 5MB');
+        return;
+      }
+      uploadDocument(file);
+    }
+  });
+
+  function uploadDocument(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('_csrf_token', "{{=response.csrf_token}}");
+
+    fetch("{{=URL('api', 'upload_document')}}", {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Add message about uploaded document
+        const message = `I've uploaded my ${data.doc_type}: ${file.name}`;
+        chat._addMessage('user', message);
+      }
+    })
+    .catch(error => {
+      console.error('Upload error:', error);
+    });
+  }
+});
+</script>
+{{end}}
