@@ -70,7 +70,7 @@ async def create_upload():
 ```
 
 ### 1040 Calculation
-``python
+```python
 @app.post("/calculate/1040")
 def calculate_1040(income: schemas.TaxInput):
     """Basic 1040 calculation"""
