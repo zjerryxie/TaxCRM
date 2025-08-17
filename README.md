@@ -14,7 +14,7 @@ graph TD
     B --> E[Agent Tools]
     C --> F[Secure Documents]
     D --> G[1040 Calculations]
-
+```
 ## ✨ Key Features
 Feature | 	Description	 | Status |
 --------|----------------|--------|
