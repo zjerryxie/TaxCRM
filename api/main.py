@@ -1,24 +1,24 @@
-from fastapi import FastAPI, UploadFile, HTTPException
-from tools import intake, docs, calculator, esign
-from models import IntakeRequest, TaxReturnResponse, PresignRequest, PresignResponse
+from fastapi import FastAPI, Depends
+from fastapi.security import OAuth2PasswordBearer
+from logger import log_audit
+import tools.calc1040 as calc1040
+import tools.docs as docs
 
-app = FastAPI(title="TaxCRM API", version="0.1")
+app = FastAPI(title="TaxCRM API")
 
-@app.post("/intake", response_model=TaxReturnResponse)
-async def intake_client(request: IntakeRequest):
-    return intake.process_intake(request)
+# OAuth2 placeholder (can integrate with Auth0/Okta/Keycloak later)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-@app.post("/docs/presign", response_model=PresignResponse)
-async def get_presign_url(req: PresignRequest):
-    url = docs.generate_presign_url(req.filename, req.operation)
-    if not url:
-        raise HTTPException(status_code=500, detail="Failed to generate presign URL")
-    return PresignResponse(url=url)
+@app.get("/")
+async def root():
+    return {"message": "Welcome to TaxCRM API"}
 
-@app.post("/return/calculate", response_model=TaxReturnResponse)
-async def calculate_return(request: IntakeRequest):
-    return calculator.run_1040(request)
+@app.post("/calc1040")
+@log_audit
+async def calculate_1040(income: float, status: str, token: str = Depends(oauth2_scheme)):
+    return calc1040.calc_1040(income, status)
 
-@app.post("/esign")
-async def esign_return(request: IntakeRequest):
-    return esign.send_for_esign(request)
+@app.get("/presign")
+@log_audit
+async def presign(file_name: str, token: str = Depends(oauth2_scheme)):
+    return docs.generate_presign_url(file_name)
