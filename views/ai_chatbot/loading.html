@@ -1,0 +1,171 @@
+{{
+response.title = 'Processing your tax question...'
+response.meta.viewport = 'width=device-width, initial-scale=1.0'
+}}
+
+{{extend 'layout.html'}}
+
+{{block head}}
+<style>
+  .taxcrm-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    text-align: center;
+    background-color: #f8f9fa;
+  }
+  
+  .tax-spinner {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 20px auto;
+  }
+  
+  .tax-spinner-circle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 8px solid transparent;
+    border-top-color: #4a6da7; /* IRS blue */
+    border-radius: 50%;
+    animation: tax-spin 1.5s linear infinite;
+  }
+  
+  .tax-spinner-inner {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border: 8px solid transparent;
+    border-top-color: #28a745; /* IRS green */
+    border-radius: 50%;
+    animation: tax-spin-reverse 1s linear infinite;
+  }
+  
+  .tax-spinner-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: #495057;
+  }
+  
+  @keyframes tax-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  @keyframes tax-spin-reverse {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(-360deg); }
+  }
+  
+  .loading-steps {
+    margin-top: 30px;
+    max-width: 500px;
+  }
+  
+  .loading-step {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: fadeIn 0.5s forwards;
+  }
+  
+  .loading-step:nth-child(1) { animation-delay: 0.3s; }
+  .loading-step:nth-child(2) { animation-delay: 0.6s; }
+  .loading-step:nth-child(3) { animation-delay: 0.9s; }
+  
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
+  .step-icon {
+    margin-right: 15px;
+    color: #4a6da7;
+    font-size: 20px;
+  }
+  
+  .irs-seal {
+    margin-top: 30px;
+    opacity: 0.7;
+    width: 80px;
+  }
+</style>
+{{end}}
+
+{{block content}}
+<div class="taxcrm-loading-container">
+  <div class="tax-spinner">
+    <div class="tax-spinner-circle"></div>
+    <div class="tax-spinner-inner"></div>
+    <div class="tax-spinner-icon">
+      <i class="fas fa-file-invoice-dollar"></i>
+    </div>
+  </div>
+  
+  <h2>Analyzing Your Tax Question</h2>
+  <p class="lead">Consulting IRS regulations and your tax profile...</p>
+  
+  <div class="loading-steps">
+    <div class="loading-step">
+      <div class="step-icon">
+        <i class="fas fa-user-check"></i>
+      </div>
+      <div>
+        <strong>Verifying your account</strong>
+        <div class="text-muted">Checking authentication status</div>
+      </div>
+    </div>
+    
+    <div class="loading-step">
+      <div class="step-icon">
+        <i class="fas fa-search-dollar"></i>
+      </div>
+      <div>
+        <strong>Reviewing tax documents</strong>
+        <div class="text-muted">Processing W-2s, 1099s, and deductions</div>
+      </div>
+    </div>
+    
+    <div class="loading-step">
+      <div class="step-icon">
+        <i class="fas fa-balance-scale"></i>
+      </div>
+      <div>
+        <strong>Checking compliance</strong>
+        <div class="text-muted">Validating against current IRS regulations</div>
+      </div>
+    </div>
+  </div>
+  
+  <img src="{{=URL('static', 'images/irs-seal.png')}}" 
+       alt="IRS Compliance Verified" 
+       class="irs-seal img-fluid mt-4">
+  
+  <div class="mt-4 text-muted small">
+    <i class="fas fa-info-circle"></i>
+    Response time may vary based on question complexity
+  </div>
+</div>
+
+<script>
+// Auto-redirect when parent page is ready
+if (window.opener) {
+  window.opener.postMessage('tax_chat_loaded', '*');
+  setTimeout(() => window.close(), 2000);
+} else {
+  // Simulate processing time
+  setTimeout(() => {
+    window.location.href = "{{=URL('ai_chatbot', 'index')}}";
+  }, 3000);
+}
+</script>
+{{end}}
