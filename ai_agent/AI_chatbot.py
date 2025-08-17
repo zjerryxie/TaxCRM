@@ -19,6 +19,18 @@ from openai import OpenAI
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("TaxAIBot")
 
+class AIChatbot:
+    def __init__(self):
+        # put OpenAI init here if needed
+        pass
+
+    def ask_question(self, question: str, user_context: dict = None):
+        # Call OpenAI here (from the enhanced version we built earlier)
+        # Use user_context (tax info, filing history, etc.) if available
+        answer = f"AI response to: {question} (context: {user_context})"
+        return answer
+
+
 class TaxChatBot:
     def __init__(self, db_config: Dict, openai_key: str):
         """
