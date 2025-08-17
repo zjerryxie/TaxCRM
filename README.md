@@ -54,23 +54,61 @@ nano .env  # Add your AWS credentials
 uvicorn main:app --reload
 ```
 
+## 📚 API Reference
+### Document Upload Flow
+```python
+@app.post("/upload")
+async def create_upload():
+    """Generate S3 presigned URL"""
+    return {
+        "url": s3.generate_presigned_url(...),
+        "fields": {
+            "key": "user_123/doc.pdf",
+            "x-amz-algorithm": "AWS4-HMAC-SHA256"
+        }
+    }
+```
 
+### 1040 Calculation
+``python
+@app.post("/calculate/1040")
+def calculate_1040(income: schemas.TaxInput):
+    """Basic 1040 calculation"""
+    taxable_income = income.wages - STANDARD_DEDUCTION_2024
+    tax_owed = calculate_tax_bracket(taxable_income)
+    return {
+        "refund": income.withholding - tax_owed,
+        "deductions": ["standard"]
+    }
+```
 
+## 🔒 Security
 
-# TaxCRM API
+* Data Encryption: AES-256 for PII at rest
+* Access Control: JWT authentication
+* Compliance:
+** IRS Pub 1075 guidelines
+** SOC 2 Type I ready
 
-A lightweight CRM + Tax Processing API (FastAPI).
-
-## Features
-- FastAPI backend
-- Secure S3 presigned uploads
-- Simple 1040 calculator
-- Agent tool stubs (intake, e-sign)
-- Logging + Audit trail
-
-## Setup
 ```bash
-git clone https://github.com/zjerryxie/TaxCRM.git
-cd TaxCRM/api
-pip install -r requirements.txt
-uvicorn main:app --reload
+# Generate encryption keys
+openssl rand -hex 32 > .encryption_key
+```
+## 🛠 Development
+### Testing
+```bash
+pytest tests/ --cov=app --cov-report=html
+```
+### Building Docker Image
+```bash
+docker build -t taxcrm-api .
+docker run -p 8000:8000 taxcrm-api
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (git checkout -b feature/amazing-feature)
+3. Commit changes (git commit -m 'Add amazing feature')
+4. Push to branch (git push origin feature/amazing-feature)
+5. Open a Pull Request
