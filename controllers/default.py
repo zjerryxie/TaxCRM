@@ -8,6 +8,17 @@ import datasetup
 
 import boto3
 
+class AIChatbot:
+    def __init__(self):
+        # put OpenAI init here if needed
+        pass
+
+    def ask_question(self, question: str, user_context: dict = None):
+        # Call OpenAI here (from the enhanced version we built earlier)
+        # Use user_context (tax info, filing history, etc.) if available
+        answer = f"AI response to: {question} (context: {user_context})"
+        return answer
+
 def extract_w2_data(s3_path: str) -> dict:
     textract = boto3.client('textract')
     response = textract.analyze_document(
