@@ -10,3 +10,13 @@ def process_intake(request: IntakeRequest) -> TaxReturnResponse:
         tax_liability=calc["tax_liability"],
         refund=calc["refund"]
     )
+
+"""
+Client intake tool stub
+Future: process onboarding forms, validate identity (KYC), 
+and push structured data into CRM DB.
+"""
+
+def intake_new_client(client_data: dict) -> dict:
+    # TODO: Add AI pipeline (OCR, doc validation, auto-form fill)
+    return {"status": "success", "client": client_data}
