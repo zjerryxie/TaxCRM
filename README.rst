@@ -1,16 +1,12 @@
 description
 -----------
 
-This is a CRM system based on web2py and sqlite.
-
-It links to opencart online shop which runs on apache and mysql.
+This is a CRM system for US Tax service based on web2py and mysql.
 
 requirements
 ------------
 
 #. install AMPPS
-
-#. goto ampps installation and install opencart
 
 * rename config-dist.php and admin/config-dist.php to config.php
 * goto 127.0.0.1:80 [note localhost fails]
@@ -72,7 +68,6 @@ viewtools
 
 static
 ------
-
 crm.css
 crafty_* for uk postcode lookup
 
@@ -80,7 +75,6 @@ views
 -----
 
 shared - historyform, files, edit, grid
-
 specific - customer, salesorder
 
 controllers
