@@ -1,4 +1,4 @@
-# coding: utf8
+# coding: utf8 for 简体中文
 {
 '!langcode!': 'zh-tw',
 '!langname!': '中文',
