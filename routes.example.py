@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-#  This is an app-specific example router
+#  This is an app-specific example router, specifically for web2py
 #
 #  This simple router is used for setting languages from app/languages directory
 #  as a part of the application path:  app/<lang>/controller/function
